@@ -1,4 +1,4 @@
-import { h } from "hyperapp"
+import { h } from 'hyperapp';
 
 import Card from './card';
 import ValueSelect from './value-select';
@@ -12,18 +12,31 @@ interface Props {
   selectCardValue: (cardId: string, value: number) => void;
 }
 
-const renderCards = (cards: Card[], selectCardValue: (cardId: string, value: number) => void) => {
-  console.log('rendering', cards);
+const renderCards = (
+  cards: Card[],
+  selectCardValue: (cardId: string, value: number) => void,
+) => {
   return cards.map(card => (
     <div class={Styles.cardContainer} key={card.id}>
       <Card title={card.title}>
-        {typeof card.value === 'number' ? null : <ValueSelect values={card.value} onSelect={selectCardValue} />}
+        {typeof card.value === 'number' ? null : (
+          <ValueSelect
+            id={card.id}
+            values={card.value}
+            onSelect={selectCardValue}
+          />
+        )}
       </Card>
     </div>
   ));
 };
 
-const Game = ({ userState, drawUserCard, dealerCards, selectCardValue }: Props) => (
+const Game = ({
+  userState,
+  drawUserCard,
+  dealerCards,
+  selectCardValue,
+}: Props) => (
   <div class={Styles.container}>
     <div class={Styles.cardsContainer}>
       {renderCards(dealerCards, selectCardValue)}
@@ -31,11 +44,9 @@ const Game = ({ userState, drawUserCard, dealerCards, selectCardValue }: Props) 
     <div class={Styles.cardsContainer}>
       {renderCards(userState.cards, selectCardValue)}
     </div>
-    <div class={Styles.score}>
-      {userState.score}
-    </div>
+    <div class={Styles.score}>{userState.score}</div>
     <div class={Styles.actions}>
-      <button onclick={drawUserCard}>DRAW</button>      
+      <button onclick={drawUserCard}>DRAW</button>
     </div>
   </div>
 );

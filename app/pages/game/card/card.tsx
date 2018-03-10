@@ -1,4 +1,4 @@
-import { h } from "hyperapp"
+import { h } from 'hyperapp';
 import * as Styles from './card.css';
 
 interface Props {

@@ -1,4 +1,4 @@
-const unqiueCards: { value: number | number[], title: string }[] = [
+const unqiueCards: { value: number | number[]; title: string }[] = [
   {
     value: 2,
     title: '2',
@@ -54,15 +54,26 @@ const unqiueCards: { value: number | number[], title: string }[] = [
 ];
 
 export const getCards = (): Card[] => {
-  return [...unqiueCards, ...unqiueCards, ...unqiueCards, ...unqiueCards].map((card, idx) => {
-    const value = typeof card.value === 'number' ? card.value : card.value[0];
-    return {
-      ...card,
-      id: `${idx}-${value}`,
-    };
-  });
-}
+  return [...unqiueCards, ...unqiueCards, ...unqiueCards, ...unqiueCards].map(
+    (card, idx) => {
+      const value = typeof card.value === 'number' ? card.value : card.value[0];
+      return {
+        ...card,
+        id: `${idx}-${value}`,
+      };
+    },
+  );
+};
 
 export const getRandomIndex = (cards: Card[]) => {
-  return Math.floor(Math.random()*cards.length);
+  return Math.floor(Math.random() * cards.length);
+};
+
+export const calculateScore = (cards: Card[], selectValues: SelectedValues) => {
+  return cards.reduce((last, current) => {
+    if (typeof current.value === 'number') {
+      return last + current.value;
+    }
+    return last + selectValues[current.id];
+  }, 0);
 };
