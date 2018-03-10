@@ -1,6 +1,15 @@
-.card {
-  width: 70px;
-  height: 120px;
-  background-color: blue;
-  color: white;
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 720px;
+  align-items: center;
+}
+
+.cardContainer {
+  padding: 10px;
+}
+
+.cardsContainer {
+  display: flex;
+  padding: 30px;
 }

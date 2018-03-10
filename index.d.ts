@@ -9,3 +9,9 @@ interface Card {
   title: string;
   isOpen?: boolean;
 }
+
+interface UserState {
+  cards: Card[];
+  score: number;
+  selectedValues: { [id: string]: number }
+}

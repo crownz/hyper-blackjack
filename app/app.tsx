@@ -15,43 +15,37 @@ enum GameState {
 interface State {
   gameState: GameState;
   cards: Card[];
-  userCards: Card[];
   dealerCards: Card[];
+  user: UserState;
 }
 
 interface Actions {
   changeGameState: (value: GameState) => void;
-  drawCard: () => void;
   drawDelearCard: () => void;
   startGame: () => void;
+  drawUserCard: () => void
+  selectCardValue: (cardId: string, value: number) => void;
 }
 
 const appState: State = {
   gameState: GameState.NotStarted,
   cards: getCards(),
-  userCards: [],
   dealerCards: [],
+  user: {
+    cards: [],
+    score: 0,
+    selectedValues: {},
+  }
 };
 
 const appActions: Actions = {
   changeGameState: (value: GameState) => (state: State) => ({ gameState: value }),
   startGame: () => (state: State, actions: Actions) => {
-    console.log('starting!');
     actions.drawDelearCard();
     actions.drawDelearCard();
-    actions.drawCard();
-    actions.drawCard();
+    actions.drawUserCard();
+    actions.drawUserCard();
     actions.changeGameState(GameState.Started);
-    console.log('state', state);
-  },
-  drawCard: () => (state: State) => {
-    const cardIndex = getRandomIndex(state.cards);
-    const newCards = [...state.cards];
-    newCards.splice(cardIndex, 1);
-    return {
-      cards: newCards,
-      userCards: [...state.userCards, state.cards[cardIndex]],
-    };
   },
   drawDelearCard: () => (state: State) => {
     const cardIndex = getRandomIndex(state.cards);
@@ -62,6 +56,38 @@ const appActions: Actions = {
       dealerCards: [...state.dealerCards, state.cards[cardIndex]],
     };
   },
+  selectCardValue: (cardId: string, value: number) => (state: State) => {
+    return {
+      user: {
+        selectedValues: { ...state.user.selectedValues, [cardId]: value },
+      }
+    };
+  },
+  drawUserCard: () => (state: State) => {
+    const cardIndex = getRandomIndex(state.cards);
+    const newCards = [...state.cards];
+    newCards.splice(cardIndex, 1);
+    const newCard = state.cards[cardIndex];
+    if (typeof newCard.value === 'number') {
+      return {
+        cards: newCards,
+        user: {
+          cards: [...state.user.cards, newCard],
+          score: state.user.score + newCard.value,
+          selectedValues: state.user.selectedValues,
+        }
+      };
+    } else {
+      return {
+        cards: newCards,
+        user: {
+          cards: [...state.user.cards, newCard],
+          score: state.user.score + newCard.value[0],
+          selectedValues: { ...state.user.selectedValues, [newCard.id]: newCard.value[0] },
+        }
+      };
+    }
+  }
 };
 
 const renderGame = (state: State, actions: Actions) => {
@@ -69,14 +95,13 @@ const renderGame = (state: State, actions: Actions) => {
     case GameState.NotStarted:
       return <Home startGame={actions.startGame} />;
     case GameState.Started:
-      return <Game drawCard={actions.drawCard} userCards={state.userCards} />;
+      return <Game userState={state.user} drawUserCard={actions.drawUserCard} dealerCards={state.dealerCards} />;
     default:
       return <Home startGame={actions.startGame} />;
   }
 }
 
 const view = (state: State, actions: Actions) => {
-  console.log('random index:', getRandomIndex(state.cards));
   return (
     <div class={Styles.container}>
       <div class={Styles.title}>
