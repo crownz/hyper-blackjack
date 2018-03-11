@@ -12,7 +12,15 @@ interface Card {
   isOpen?: boolean;
 }
 
+enum GameStatus {
+  Won = 'Won',
+  Lost = 'Lost',
+  ValueChangeNeeded = 'ValueChangeNeeded',
+  OK = 'OK',
+}
+
 interface UserState {
   cards: Card[];
   score: number;
+  gameStatus: GameStatus;
 }

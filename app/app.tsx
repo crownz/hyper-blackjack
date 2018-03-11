@@ -1,10 +1,19 @@
 import { h, app } from 'hyperapp';
 
-import { getCards, getRandomIndex, calculateScore } from './utils/game';
+import {
+  getCards,
+  getRandomIndex,
+  calculateScore,
+  getGameStatus,
+  findDealerScore,
+  DEALER_THRESHOLD,
+  calculateResult,
+} from './utils/game';
 import Home from './pages/home';
 import Game from './pages/game';
 
 import * as Styles from './app.css';
+import { UserState, GameStatus } from './interfaces/game';
 
 enum GameState {
   NotStarted = 'NotStarted',
@@ -20,11 +29,12 @@ interface State {
 }
 
 interface Actions {
-  changeGameState: (value: GameState) => void;
-  drawDelearCard: () => void;
-  startGame: () => void;
-  drawUserCard: () => void;
-  selectCardValue: (params: { cardId: string; value: number }) => void;
+  changeGameState: (value: GameState) => any;
+  drawDelearCard: () => any;
+  startGame: () => any;
+  drawUserCard: () => any;
+  simulateDealer: () => any;
+  selectCardValue: (params: { cardId: string; value: number }) => any;
 }
 
 const appState: State = {
@@ -34,6 +44,7 @@ const appState: State = {
   user: {
     cards: [],
     score: 0,
+    gameStatus: GameStatus.OK,
   },
 };
 
@@ -67,6 +78,7 @@ const appActions: Actions = {
       user: {
         cards: newUserCards,
         score: calculateScore(newUserCards),
+        gameStatus: getGameStatus(newUserCards),
       },
     };
   },
@@ -80,6 +92,21 @@ const appActions: Actions = {
       user: {
         cards,
         score: calculateScore(cards),
+        gameStatus: getGameStatus(cards),
+      },
+    };
+  },
+  simulateDealer: () => (state: State, actions: Actions) => {
+    let dealerScore = findDealerScore(state.dealerCards);
+    while (dealerScore < DEALER_THRESHOLD) {
+      const newState = actions.drawDelearCard();
+      dealerScore = findDealerScore(newState.dealerCards);
+    }
+    return {
+      user: {
+        cards: state.user.cards,
+        score: state.user.score,
+        gameStatus: calculateResult(state.user.score, dealerScore),
       },
     };
   },
@@ -98,6 +125,7 @@ const renderGame = (state: State, actions: Actions) => {
           selectCardValue={(cardId, value) =>
             actions.selectCardValue({ cardId, value })
           }
+          simulateDealer={actions.simulateDealer}
         />
       );
     default:

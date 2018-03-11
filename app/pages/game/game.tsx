@@ -4,10 +4,12 @@ import Card from './card';
 import ValueSelect from './value-select';
 
 import * as Styles from './game.css';
+import { GameStatus, UserState } from '../../interfaces/game';
 
 interface Props {
   userState: UserState;
   drawUserCard: () => void;
+  simulateDealer: () => void;
   dealerCards: Card[];
   selectCardValue: (cardId: string, value: number) => void;
 }
@@ -34,6 +36,7 @@ const renderCards = (
 const Game = ({
   userState,
   drawUserCard,
+  simulateDealer,
   dealerCards,
   selectCardValue,
 }: Props) => (
@@ -46,8 +49,20 @@ const Game = ({
     </div>
     <div class={Styles.score}>{userState.score}</div>
     <div class={Styles.actions}>
-      <button onclick={drawUserCard}>DRAW</button>
+      <button
+        onclick={drawUserCard}
+        disabled={userState.gameStatus === GameStatus.ValueChangeNeeded}
+      >
+        DRAW
+      </button>
+      <button
+        onclick={simulateDealer}
+        disabled={userState.gameStatus === GameStatus.ValueChangeNeeded}
+      >
+        STAND
+      </button>
     </div>
+    {userState.gameStatus === GameStatus.Lost && <div class={Styles.overlay} />}
   </div>
 );
 
