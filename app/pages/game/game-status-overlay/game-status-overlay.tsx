@@ -1,6 +1,8 @@
 import { h } from 'hyperapp';
-import * as Styles from './game-status-overlay.css';
+
 import { GameStatus } from '../../../interfaces/game';
+
+import * as Styles from './game-status-overlay.css';
 
 interface Props {
   status: GameStatus;

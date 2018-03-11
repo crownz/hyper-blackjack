@@ -1,19 +1,22 @@
 import { h } from 'hyperapp';
 
+import {
+  GameState,
+  GameActions,
+  GameStatus,
+  Card,
+} from '../../interfaces/game';
+
 import CardComponent from './card';
 import ValueSelect from './value-select';
 import GameStatusOverlay from './game-status-overlay';
 
 import * as Styles from './game.css';
-import { GameStatus, UserState } from '../../interfaces/game';
 
 interface Props {
-  userState: UserState;
-  drawUserCard: () => void;
-  simulateDealer: () => void;
-  dealerCards: Card[];
-  selectCardValue: (cardId: string, value: number) => void;
   restartGame: () => void;
+  gameState: GameState;
+  gameActions: GameActions;
 }
 
 const renderCards = (
@@ -35,41 +38,47 @@ const renderCards = (
   ));
 };
 
-const Game = ({
-  userState,
-  drawUserCard,
-  simulateDealer,
-  dealerCards,
-  selectCardValue,
-  restartGame,
-}: Props) => (
-  <div class={Styles.container}>
-    <div class={Styles.cardsContainer}>
-      {renderCards(dealerCards, selectCardValue)}
+const selectCardValue = (selectAction: Function) => {
+  return (cardId: string, value: number) => selectAction({ cardId, value });
+};
+
+const Game = ({ restartGame, gameState, gameActions }: Props) => {
+  console.log('game state:', gameState);
+  return (
+    <div class={Styles.container}>
+      <div class={Styles.cardsContainer}>
+        {renderCards(
+          gameState.dealerCards,
+          selectCardValue(gameActions.selectCardValue),
+        )}
+      </div>
+      <div class={Styles.cardsContainer}>
+        {renderCards(
+          gameState.userCards,
+          selectCardValue(gameActions.selectCardValue),
+        )}
+      </div>
+      <div class={Styles.score}>{gameState.userScore}</div>
+      <div class={Styles.actions}>
+        <button
+          onclick={gameActions.drawUserCard}
+          disabled={gameState.gameStatus === GameStatus.ValueChangeNeeded}
+        >
+          DRAW
+        </button>
+        <button
+          onclick={gameActions.simulateDealer}
+          disabled={gameState.gameStatus === GameStatus.ValueChangeNeeded}
+        >
+          STAND
+        </button>
+      </div>
+      <GameStatusOverlay
+        status={gameState.gameStatus}
+        restartGame={restartGame}
+      />
     </div>
-    <div class={Styles.cardsContainer}>
-      {renderCards(userState.cards, selectCardValue)}
-    </div>
-    <div class={Styles.score}>{userState.score}</div>
-    <div class={Styles.actions}>
-      <button
-        onclick={drawUserCard}
-        disabled={userState.gameStatus === GameStatus.ValueChangeNeeded}
-      >
-        DRAW
-      </button>
-      <button
-        onclick={simulateDealer}
-        disabled={userState.gameStatus === GameStatus.ValueChangeNeeded}
-      >
-        STAND
-      </button>
-    </div>
-    <GameStatusOverlay
-      status={userState.gameStatus}
-      restartGame={restartGame}
-    />
-  </div>
-);
+  );
+};
 
 export default Game;
