@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "strict": true,
+    "strict": false,
     "jsx": "react",
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "target": "es6"
   }
 }

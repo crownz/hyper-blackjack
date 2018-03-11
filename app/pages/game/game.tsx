@@ -19,13 +19,13 @@ const renderCards = (
   return cards.map(card => (
     <div class={Styles.cardContainer} key={card.id}>
       <Card title={card.title}>
-        {typeof card.value === 'number' ? null : (
+        {card.optionalValues ? (
           <ValueSelect
             id={card.id}
-            values={card.value}
+            values={card.optionalValues}
             onSelect={selectCardValue}
           />
-        )}
+        ) : null}
       </Card>
     </div>
   ));

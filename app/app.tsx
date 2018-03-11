@@ -14,7 +14,7 @@ enum GameState {
 
 interface State {
   gameState: GameState;
-  cards: Card[];
+  deck: Card[];
   dealerCards: Card[];
   user: UserState;
 }
@@ -29,12 +29,11 @@ interface Actions {
 
 const appState: State = {
   gameState: GameState.NotStarted,
-  cards: getCards(),
+  deck: getCards(),
   dealerCards: [],
   user: {
     cards: [],
     score: 0,
-    selectedValues: {},
   },
 };
 
@@ -50,56 +49,39 @@ const appActions: Actions = {
     actions.changeGameState(GameState.Started);
   },
   drawDelearCard: () => (state: State) => {
-    const cardIndex = getRandomIndex(state.cards);
-    const newCards = [...state.cards];
-    newCards.splice(cardIndex, 1);
+    const cardIndex = getRandomIndex(state.deck);
+    const newDeck = [...state.deck];
+    newDeck.splice(cardIndex, 1);
     return {
-      cards: newCards,
-      dealerCards: [...state.dealerCards, state.cards[cardIndex]],
+      deck: newDeck,
+      dealerCards: [...state.dealerCards, state.deck[cardIndex]],
     };
   },
   selectCardValue: ({ cardId, value }: { cardId: string; value: number }) => (
     state: State,
   ) => {
-    const selectedValues = { ...state.user.selectedValues, [cardId]: value };
+    const newUserCards = [...state.user.cards];
+    const cardToUpdate = newUserCards.find(card => card.id === cardId);
+    cardToUpdate.value = value;
     return {
       user: {
-        cards: state.user.cards,
-        score: calculateScore(state.user.cards, selectedValues),
-        selectedValues,
+        cards: newUserCards,
+        score: calculateScore(newUserCards),
       },
     };
   },
   drawUserCard: () => (state: State) => {
-    const cardIndex = getRandomIndex(state.cards);
-    const newCards = [...state.cards];
-    newCards.splice(cardIndex, 1);
-    const newCard = state.cards[cardIndex];
-    if (typeof newCard.value === 'number') {
-      const cards = [...state.user.cards, newCard];
-      return {
-        cards: newCards,
-        user: {
-          score: calculateScore(cards, state.user.selectedValues),
-          selectedValues: state.user.selectedValues,
-          cards,
-        },
-      };
-    } else {
-      const cards = [...state.user.cards, newCard];
-      const selectedValues = {
-        ...state.user.selectedValues,
-        [newCard.id]: newCard.value[0],
-      };
-      return {
-        cards: newCards,
-        user: {
-          score: calculateScore(cards, selectedValues),
-          selectedValues,
-          cards,
-        },
-      };
-    }
+    const cardIndex = getRandomIndex(state.deck);
+    const newDeck = [...state.deck];
+    newDeck.splice(cardIndex, 1);
+    const cards = [...state.user.cards, state.deck[cardIndex]];
+    return {
+      deck: newDeck,
+      user: {
+        cards,
+        score: calculateScore(cards),
+      },
+    };
   },
 };
 

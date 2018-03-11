@@ -4,18 +4,15 @@ declare module '*.css' {
 }
 
 interface Card {
-  value: number | number[];
   id: string;
+  value: number;
   title: string;
+  optionalValues?: number[];
+  lowestValue?: number;
   isOpen?: boolean;
-}
-
-interface SelectedValues {
-  [id: string]: number;
 }
 
 interface UserState {
   cards: Card[];
   score: number;
-  selectedValues: SelectedValues;
 }
