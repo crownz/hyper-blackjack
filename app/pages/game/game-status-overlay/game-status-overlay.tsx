@@ -4,6 +4,7 @@ import { GameStatus } from '../../../interfaces/game';
 
 interface Props {
   status: GameStatus;
+  restartGame: () => void;
 }
 
 const isGameInProggress = (status: GameStatus) => {
@@ -23,9 +24,12 @@ const getResultTitle = (status: GameStatus) => {
   }
 };
 
-const GameStatusOverlay = ({ status }: Props) => {
+const GameStatusOverlay = ({ status, restartGame }: Props) => {
   return isGameInProggress(status) ? null : (
-    <div class={Styles.overlay}>{getResultTitle(status)}</div>
+    <div class={Styles.overlay}>
+      {getResultTitle(status)}
+      <button onclick={restartGame}>PLAY AGAIN</button>
+    </div>
   );
 };
 

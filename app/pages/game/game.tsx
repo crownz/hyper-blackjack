@@ -13,6 +13,7 @@ interface Props {
   simulateDealer: () => void;
   dealerCards: Card[];
   selectCardValue: (cardId: string, value: number) => void;
+  restartGame: () => void;
 }
 
 const renderCards = (
@@ -40,6 +41,7 @@ const Game = ({
   simulateDealer,
   dealerCards,
   selectCardValue,
+  restartGame,
 }: Props) => (
   <div class={Styles.container}>
     <div class={Styles.cardsContainer}>
@@ -63,7 +65,10 @@ const Game = ({
         STAND
       </button>
     </div>
-    <GameStatusOverlay status={userState.gameStatus} />
+    <GameStatusOverlay
+      status={userState.gameStatus}
+      restartGame={restartGame}
+    />
   </div>
 );
 

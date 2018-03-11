@@ -32,6 +32,8 @@ interface Actions {
   changeGameState: (value: GameState) => any;
   drawDelearCard: (isOpen?: boolean) => any;
   startGame: () => any;
+  restartGame: () => any;
+  setInitialState: () => any;
   openDealerCards: () => any;
   drawUserCard: () => any;
   simulateDealer: () => any;
@@ -59,6 +61,22 @@ const appActions: Actions = {
     actions.drawUserCard();
     actions.drawUserCard();
     actions.changeGameState(GameState.Started);
+  },
+  setInitialState: () => (state: State) => {
+    return {
+      gameState: GameState.NotStarted,
+      deck: getCards(),
+      dealerCards: [],
+      user: {
+        cards: [],
+        score: 0,
+        gameStatus: GameStatus.OK,
+      },
+    };
+  },
+  restartGame: () => (state: State, actions: Actions) => {
+    actions.setInitialState();
+    actions.startGame();
   },
   drawDelearCard: (isHidden: boolean = false) => (state: State) => {
     const cardIndex = getRandomIndex(state.deck);
@@ -139,6 +157,7 @@ const renderGame = (state: State, actions: Actions) => {
             actions.selectCardValue({ cardId, value })
           }
           simulateDealer={actions.simulateDealer}
+          restartGame={actions.restartGame}
         />
       );
     default:
@@ -146,7 +165,7 @@ const renderGame = (state: State, actions: Actions) => {
   }
 };
 
-const view = (state: State, actions: Actions) => {
+const View = (state: State, actions: Actions) => {
   return (
     <div class={Styles.container}>
       <div class={Styles.title}>Welcome to HyperBlackjack.</div>
@@ -155,4 +174,4 @@ const view = (state: State, actions: Actions) => {
   );
 };
 
-app(appState, appActions, view, document.body);
+app(appState, appActions, View, document.body);
