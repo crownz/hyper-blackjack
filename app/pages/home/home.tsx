@@ -1,4 +1,7 @@
 import { h } from 'hyperapp';
+
+import Button from '../../components/button';
+
 import * as Styles from './home.css';
 
 interface Props {
@@ -7,7 +10,7 @@ interface Props {
 
 const Home = ({ startGame }: Props) => (
   <div class={Styles.container}>
-    <button onclick={startGame}>START</button>
+    <Button onClick={startGame}>START</Button>
   </div>
 );
 

@@ -1,5 +1,9 @@
 {
   "name": "hyper-blackjack",
+  "author": {
+    "name": "crownz"
+  },
+  "license": "MIT",
   "version": "0.0.1",
   "scripts": {
     "start": "parcel app/index.html",
@@ -12,8 +16,9 @@
     "hyperapp": "1.1.2",
     "parcel-bundler": "1.6.2",
     "postcss-modules": "1.1.0",
-    "tslint": "^5.9.1",
-    "tslint-config-airbnb": "^5.7.0"
+    "precss": "3.1.2",
+    "tslint": "5.9.1",
+    "tslint-config-airbnb": "5.7.0"
   },
   "devDependencies": {
     "typescript": "2.7.2"

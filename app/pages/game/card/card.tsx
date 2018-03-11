@@ -8,7 +8,7 @@ interface Props {
 
 const Card = ({ title, isHidden }: Props, children: JSX.IntrinsicElements) => (
   <div class={`${Styles.card} ${isHidden ? Styles.hidden : ''}`}>
-    <div class={Styles.title}>{title}</div>
+    <div class={Styles.title}>{isHidden ? '?' : title}</div>
     {children}
   </div>
 );

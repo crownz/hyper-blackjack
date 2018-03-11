@@ -1,9 +1,23 @@
 .container {
   display: flex;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
 }
 
 .value {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex: 1;
   padding: 3px;
-  border: 1px solid grey;
-  border-radius: 2px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.active {
+  border: 1px solid #455a64;
 }

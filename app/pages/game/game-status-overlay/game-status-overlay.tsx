@@ -3,6 +3,7 @@ import { h } from 'hyperapp';
 import { GameStatus } from '../../../interfaces/game';
 
 import * as Styles from './game-status-overlay.css';
+import Button from '../../../components/button';
 
 interface Props {
   status: GameStatus;
@@ -29,8 +30,10 @@ const getResultTitle = (status: GameStatus) => {
 const GameStatusOverlay = ({ status, restartGame }: Props) => {
   return isGameInProggress(status) ? null : (
     <div class={Styles.overlay}>
-      {getResultTitle(status)}
-      <button onclick={restartGame}>PLAY AGAIN</button>
+      <div class={Styles.title}>{getResultTitle(status)}</div>
+      <div class={Styles.btn}>
+        <Button onClick={restartGame}>PLAY AGAIN</Button>
+      </div>
     </div>
   );
 };

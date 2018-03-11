@@ -1,4 +1,4 @@
-import { GameStatus } from '../interfaces/game';
+import { GameStatus, Card } from '../interfaces/game';
 
 const unqiueCards: Card[] = [
   {
@@ -70,7 +70,7 @@ const unqiueCards: Card[] = [
   },
 ];
 
-const MAXIMUM_SCORE = 21;
+export const MAXIMUM_SCORE = 21;
 export const DEALER_THRESHOLD = 17;
 
 export const getCards = (): Card[] => {
