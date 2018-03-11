@@ -1,7 +1,8 @@
 import { h } from 'hyperapp';
 
-import Card from './card';
+import CardComponent from './card';
 import ValueSelect from './value-select';
+import GameStatusOverlay from './game-status-overlay';
 
 import * as Styles from './game.css';
 import { GameStatus, UserState } from '../../interfaces/game';
@@ -20,7 +21,7 @@ const renderCards = (
 ) => {
   return cards.map(card => (
     <div class={Styles.cardContainer} key={card.id}>
-      <Card title={card.title}>
+      <CardComponent title={card.title} isHidden={card.isHidden}>
         {card.optionalValues ? (
           <ValueSelect
             id={card.id}
@@ -28,7 +29,7 @@ const renderCards = (
             onSelect={selectCardValue}
           />
         ) : null}
-      </Card>
+      </CardComponent>
     </div>
   ));
 };
@@ -62,7 +63,7 @@ const Game = ({
         STAND
       </button>
     </div>
-    {userState.gameStatus === GameStatus.Lost && <div class={Styles.overlay} />}
+    <GameStatusOverlay status={userState.gameStatus} />
   </div>
 );
 

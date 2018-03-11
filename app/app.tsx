@@ -30,8 +30,9 @@ interface State {
 
 interface Actions {
   changeGameState: (value: GameState) => any;
-  drawDelearCard: () => any;
+  drawDelearCard: (isOpen?: boolean) => any;
   startGame: () => any;
+  openDealerCards: () => any;
   drawUserCard: () => any;
   simulateDealer: () => any;
   selectCardValue: (params: { cardId: string; value: number }) => any;
@@ -54,18 +55,20 @@ const appActions: Actions = {
   }),
   startGame: () => (state: State, actions: Actions) => {
     actions.drawDelearCard();
-    actions.drawDelearCard();
+    actions.drawDelearCard(true);
     actions.drawUserCard();
     actions.drawUserCard();
     actions.changeGameState(GameState.Started);
   },
-  drawDelearCard: () => (state: State) => {
+  drawDelearCard: (isHidden: boolean = false) => (state: State) => {
     const cardIndex = getRandomIndex(state.deck);
     const newDeck = [...state.deck];
     newDeck.splice(cardIndex, 1);
+    const newCard = state.deck[cardIndex];
+    newCard.isHidden = isHidden;
     return {
       deck: newDeck,
-      dealerCards: [...state.dealerCards, state.deck[cardIndex]],
+      dealerCards: [...state.dealerCards, newCard],
     };
   },
   selectCardValue: ({ cardId, value }: { cardId: string; value: number }) => (
@@ -96,7 +99,17 @@ const appActions: Actions = {
       },
     };
   },
+  openDealerCards: () => (state: State) => {
+    const dealerCards = state.dealerCards.map(card => ({
+      ...card,
+      isHidden: false,
+    }));
+    return {
+      dealerCards,
+    };
+  },
   simulateDealer: () => (state: State, actions: Actions) => {
+    actions.openDealerCards();
     let dealerScore = findDealerScore(state.dealerCards);
     while (dealerScore < DEALER_THRESHOLD) {
       const newState = actions.drawDelearCard();

@@ -3,10 +3,11 @@ import * as Styles from './card.css';
 
 interface Props {
   title: string;
+  isHidden: boolean;
 }
 
-const Card = ({ title }: Props, children: JSX.IntrinsicElements) => (
-  <div class={Styles.card}>
+const Card = ({ title, isHidden }: Props, children: JSX.IntrinsicElements) => (
+  <div class={`${Styles.card} ${isHidden ? Styles.hidden : ''}`}>
     <div class={Styles.title}>{title}</div>
     {children}
   </div>
